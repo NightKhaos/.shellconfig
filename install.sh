@@ -1,6 +1,9 @@
 #!/bin/bash -e
-ZSHRC_SOURCE=$(dirname $0)/zshrc
-POWERLINE_CONFIG_DIR=$(dirname $0)/powerline
+cd "$(dirname $0)"
+WHEREAMI=$(pwd)
+cd -
+ZSHRC_SOURCE=$WHEREAMI/zshrc
+POWERLINE_CONFIG_DIR=$WHEREAMI/powerline
 
 # Setup Shell
 [ -e "$ZSHRC_SOURCE" ] && ( [ -e "$HOME/.zshrc" ] || ln -s "$ZSHRC_SOURCE" "$HOME/.zshrc" )
