@@ -10,9 +10,4 @@ POWERLINE_CONFIG_DIR=$(dirname $0)/powerline
 mkdir -p "$HOME/.config"
 [ -e "$POWERLINE_CONFIG_DIR" ] && ( [ -e "$HOME/.config/powerline" ] || ln -s "$POWERLINE_CONFIG_DIR" "$HOME/.config/powerline")
 
-# Install Powerline Fonts
-git clone https://github.com/powerline/fonts.git --depth=1
-cd fonts
-./install.sh
-cd ..
-rm -rf fonts
+
