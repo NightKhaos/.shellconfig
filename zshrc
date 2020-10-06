@@ -41,8 +41,10 @@ else
 fi
 if [[ "$TERM_PROGRAM" != "iTerm.app" ]] && [[ ! -z "$SSH_CLIENT" ]]
 then
- export localeditor
- alias mvim=localeditor
+  export localeditor
+  alias mvim=localeditor
+else
+  disable -f localeditor
 fi
 
 # Fuck configuration
