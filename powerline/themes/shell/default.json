@@ -3,8 +3,7 @@
   "segments" : {
     "left" : [
       {
-        "function": "powerline.segments.shell.mode",
-        "name" : "mode"
+        "function": "powerline.segments.shell.mode"
       },
       {
         "function": "powerline.segments.common.net.hostname",
@@ -12,18 +11,15 @@
           "only_if_ssh": true,
           "exclude_domain": true
         },
-        "priority": 10,
-        "name": "hostname"
+        "priority": 10
       },
       {
         "function": "powerline.segments.common.env.virtualenv",
-        "priority": 30,
-        "name" : "virtualenv"
+        "priority": 30
       },
       {
         "function": "powerline.segments.common.env.user",
-        "priority": 30,
-        "name" : "user"
+        "priority": 30
       },
       {
         "function": "powerline.segments.shell.cwd",
@@ -32,8 +28,7 @@
           "dir_shorten_len": 1,
           "use_path_separator": true
         },
-        "priority": 10,
-        "name" : "cwd"
+        "priority": 10
       },
       {
         "function": "powerline_kubernetes.kubernetes",
@@ -42,25 +37,21 @@
       },
       {
         "function": "powerline.segments.shell.jobnum",
-        "priority": 20,
-        "name" : "jobnum"
+        "priority": 20
       }
     ],
     "right" : [
       {
         "function": "powerline.segments.shell.last_pipe_status",
-        "priority": 10,
-        "name" : "last_pipe_status"
+        "priority": 10
       },
       {
         "function": "powerline_gitstatus.gitstatus",
-        "priority": 20,
-        "name" : "git"
+        "priority": 20
       },
       {
         "function" : "powerline_docker.docker",
-        "priority" : 50,
-        "name" : "docker"
+        "priority" : 50
       }
     ]
   }
