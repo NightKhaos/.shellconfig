@@ -41,7 +41,7 @@ else
 fi
 if [[ "$TERM_PROGRAM" != "iTerm.app" ]] && [[ ! -z "$SSH_CLIENT" ]]
 then
- export -f localeditor
+ export localeditor
  alias mvim=localeditor
 fi
 
