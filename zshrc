@@ -16,7 +16,7 @@ localeditor() {
    return
  fi
 
- echo ${CMD} ${FTYPE} ${MACHINE} ${FILENAME}
+ echo ${CMD} ${FTYPE} ${USERNAME} ${MACHINE} ${FILENAME}
 }
 
 # ZSH Settings

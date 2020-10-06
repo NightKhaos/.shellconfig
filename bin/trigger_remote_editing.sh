@@ -10,15 +10,16 @@ trigger_remote_editing() {
   fi
   LOGFILE=/tmp/iterm_remote_trigger.log
   FTYPE=$1
-  MACHINE=$2
-  FILEPATH=$3
+  USER=$2
+  MACHINE=$3
+  FILEPATH=$4
 
   TS="["$(date "+%Y-%m-%d %H:%M:%S")"]"
   echo "${TS} Triggered: ""$@" >> ${LOGFILE}
   if [[ "${FTYPE}" == "directory" ]]; then
-        CMD="${VEDITOR} scp://${MACHINE}/${FILEPATH}/"
+        CMD="${VEDITOR} scp://${USER}@${MACHINE}/${FILEPATH}/"
     elif [[ "${FTYPE}" == "file" ]]; then
-        CMD="${VEDITOR} scp://${MACHINE}/${FILEPATH}"
+        CMD="${VEDITOR} scp://${USER}@${MACHINE}/${FILEPATH}"
     else
         echo "${TS} Error: Bad arguments." >> ${LOGFILE}
         exit 1
