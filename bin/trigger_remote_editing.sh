@@ -1,6 +1,7 @@
 #!/bin/bash
 
 trigger_remote_editing() {
+  PATH=/usr/local/bin:$PATH
   if which mvim > /dev/null
   then
     export VEDITOR='mvim'
