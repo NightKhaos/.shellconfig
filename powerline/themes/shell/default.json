@@ -31,6 +31,10 @@
         "priority": 10
       },
       {
+        "function": "powerline_kubernetes.kubernetes",
+        "priority": 40
+      },
+      {
         "function": "powerline.segments.shell.jobnum",
         "priority": 20
       }
