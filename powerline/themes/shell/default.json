@@ -32,8 +32,7 @@
       },
       {
         "function": "powerline_kubernetes.kubernetes",
-        "priority": 40,
-        "name" : "kubernetes"
+        "priority": 40
       },
       {
         "function": "powerline.segments.shell.jobnum",
@@ -51,7 +50,7 @@
       },
       {
         "function" : "powerline_docker.docker",
-        "priority" : 30
+        "priority" : 50
       }
     ]
   }
