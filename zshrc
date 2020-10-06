@@ -12,7 +12,7 @@ localeditor() {
    FTYPE=file
  else
    1>&2 echo "Not a valid file or directory: ${FILENAME}"
-   exit 1
+   1>&2 echo "Touch file before use"
  fi
 
  echo ${CMD} ${FTYPE} ${MACHINE} ${FILENAME}
