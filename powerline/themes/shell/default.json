@@ -1,5 +1,13 @@
 {
-  "cursor_columns": 20, 
+  "cursor_columns": 20,
+  "segment_data" : {
+    "docker" : {
+      "display" : false
+    },
+    "kubernetes" : {
+      "display" : false
+    }
+  },
   "segments" : {
     "left" : [
       {

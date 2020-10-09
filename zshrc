@@ -19,6 +19,8 @@ localeditor() {
  echo ${CMD} ${FTYPE} ${USERNAME} ${MACHINE} ${FILENAME}
 }
 
+pupdate() { case ":${PATH:=$1}:" in *:"$1":*) ;; *) export PATH="$1:$PATH" ;; esac; }
+
 # ZSH Settings
 autoload -Uz compinit
 compinit 
@@ -52,7 +54,7 @@ fi
 eval $(thefuck --alias)
 
 # Add additional user scripts
-export PATH=$HOME/bin:$PATH
+pupdate $HOME/bin
 
 # AWS Useful Aliases
 alias whoiam='aws sts get-caller-identity'

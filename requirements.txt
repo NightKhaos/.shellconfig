@@ -1,0 +1,5 @@
+thefuck
+powerline-status
+powerline-gitstatus
+powerline-docker
+powerline-kubernetes
