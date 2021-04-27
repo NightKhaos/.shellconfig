@@ -36,7 +36,7 @@ done
 export LANG=en_AU.UTF-8
 
 # Preferred editor for local and remote sessions
-if which mvim > /dev/null
+if which mvim >/dev/null 2>/dev/null
 then
   export EDITOR='mvim'
 else
