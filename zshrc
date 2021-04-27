@@ -50,9 +50,6 @@ else
   disable -f localeditor
 fi
 
-# Fuck configuration
-eval $(thefuck --alias)
-
 # Add additional user scripts
 pupdate $HOME/bin
 

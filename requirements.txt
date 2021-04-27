@@ -1,4 +1,3 @@
-thefuck
 powerline-status
 powerline-gitstatus
 powerline-docker
