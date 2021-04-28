@@ -6,7 +6,7 @@ ZSHRC_SOURCE=$WHEREAMI/zshrc
 POWERLINE_CONFIG_DIR=$WHEREAMI/powerline
 
 # Setup Shell
-[ -e "$ZSHRC_SOURCE" ] && ( [ -e "$HOME/.zshrc" ] || ln -s "$ZSHRC_SOURCE" "$HOME/.zshrc" )
+[ -e "$ZSHRC_SOURCE" ] && ( [ -L "$HOME/.zshrc" ] || rm -f "$HOME/.zshrc" && ln -s "$ZSHRC_SOURCE" "$HOME/.zshrc" )
 [ -e "$HOME/.zsh" ] || mkdir -p "$HOME/.zsh"
 
 # Install Powerline Configuration
