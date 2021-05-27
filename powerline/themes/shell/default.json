@@ -26,6 +26,15 @@
         "priority": 30
       },
       {
+        "function": "powerline.segments.common.env.environment",
+        "name" : "aws",
+        "priority" : 20,
+        "before" : " ",
+        "args" : {
+          "variable" : "AWS_PROFILE"
+        }
+      },
+      {
         "function": "powerline.segments.common.env.user",
         "priority": 30
       },
