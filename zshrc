@@ -50,6 +50,9 @@ else
   disable -f localeditor
 fi
 
+# Shell preferences
+alias ls="ls --color"
+
 # Add additional user scripts
 pupdate $HOME/bin
 
@@ -61,3 +64,4 @@ source $(python3 -m pip show powerline-status | egrep "^Location:" | cut -f2- -d
 
 # SCM Breeze
 [ -s "$HOME/.scm_breeze/scm_breeze.sh" ] && source "$HOME/.scm_breeze/scm_breeze.sh"
+export JAVA_TOOLS_OPTIONS="-Dlog4j2.formatMsgNoLookups=true"
