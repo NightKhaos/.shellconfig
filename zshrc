@@ -56,8 +56,26 @@ alias ls="ls --color"
 # Add additional user scripts
 pupdate $HOME/bin
 
-# AWS Useful Aliases
+# AWS Useful Aliases and Functions
 alias whoiam='aws sts get-caller-identity'
+function awsall {
+  export AWS_PAGER=""
+  for i in `aws ec2 describe-regions --query "Regions[].{Name:RegionName}" --output text|sort -r`
+  do
+  echo "------"
+  echo $i
+  echo "------"
+  echo -e "\n"
+  if [ `echo "$@"|grep -i '\-\-region'|wc -l` -eq 1 ]
+  then
+      echo "You cannot use --region flag while using awsall"
+      break
+  fi
+  aws $@ --region $i
+  sleep 2
+  done
+  trap "break" INT TERM
+}
 
 # Powerline
 source $(python3 -m pip show powerline-status | egrep "^Location:" | cut -f2- -d\: | xargs)/powerline/bindings/zsh/powerline.zsh
