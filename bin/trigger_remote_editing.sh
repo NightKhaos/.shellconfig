@@ -17,9 +17,9 @@ trigger_remote_editing() {
   TS="["$(date "+%Y-%m-%d %H:%M:%S")"]"
   echo "${TS} Triggered: ""$@" >> ${LOGFILE}
   if [[ "${FTYPE}" == "directory" ]]; then
-    CMD="${VEDITOR} sftp://${USER}@${MACHINE}/${FILEPATH}/"
+    CMD="${VEDITOR} scp://${USER}@${MACHINE}/${FILEPATH}/"
   elif [[ "${FTYPE}" == "file" ]]; then
-    CMD="${VEDITOR} sftp://${USER}@${MACHINE}/${FILEPATH}"
+    CMD="${VEDITOR} scp://${USER}@${MACHINE}/${FILEPATH}"
   else
     echo "${TS} Error: Bad arguments." >> ${LOGFILE}
      exit 1
