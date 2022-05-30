@@ -42,10 +42,18 @@ then
 else
   export EDITOR='vim'
 fi
-if [[ "$TERM_PROGRAM" != "iTerm.app" ]] && [[ ! -z "$SSH_CLIENT" ]]
+if [[ "$TERM_PROGRAM" == "iTerm.app" ]] && ! [[ -e "$HOME/.zsh/99-iterm.rc" ]]
+then
+  curl -L https://iterm2.com/shell_integration/zsh -o ~/.zsh/99-iterm.rc
+  source ~/.zsh/99-iterm.rc
+elif [[ "$TERM_PROGRAM" != "iTerm.app" ]] && [[ ! -z "$SSH_CLIENT" ]]
 then
   export localeditor
   alias mvim=localeditor
+elif [[ "$TERM_PROGRAM" == 'Apple_Terminal' ]]
+then
+  # This will cause an implicit -w flag to the ssh-login script for Work Laptop (not in this repo)
+  export WAIT_FOR_INPUT=true
 else
   disable -f localeditor
 fi
