@@ -91,3 +91,9 @@ source $(python3 -m pip show powerline-status | egrep "^Location:" | cut -f2- -d
 # SCM Breeze
 [ -s "$HOME/.scm_breeze/scm_breeze.sh" ] && source "$HOME/.scm_breeze/scm_breeze.sh"
 export JAVA_TOOLS_OPTIONS="-Dlog4j2.formatMsgNoLookups=true"
+
+# Setup thefuck
+if which thefuck >/dev/null
+then
+  eval $(thefuck --alias)
+fi
