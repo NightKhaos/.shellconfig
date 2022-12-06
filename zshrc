@@ -99,5 +99,6 @@ then
 fi
 
 # Setup autocompletion
-# mkdir -p ~/.zsh/completion
-# autoload -Uz compinit && compinit -i
+mkdir -p ~/.zsh/completion
+fpath=(~/.zsh/completion $fpath)
+autoload -Uz compinit && compinit -i
