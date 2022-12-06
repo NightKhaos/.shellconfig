@@ -97,3 +97,7 @@ if which thefuck >/dev/null
 then
   eval $(thefuck --alias)
 fi
+
+# Setup autocompletion
+# mkdir -p ~/.zsh/completion
+# autoload -Uz compinit && compinit -i
