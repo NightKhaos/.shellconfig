@@ -1,39 +1,22 @@
-# Functions
-localeditor() {
- CMD=ITERM-TRIGGER-open-with-local-editor
- MACHINE=${2-$(uname -n)}
- FILENAME=${1-.}
- if [[ -d ${FILENAME} ]]; then
-   FILENAME=$(cd $FILENAME; pwd)
-   FTYPE=directory
- elif [[ -f ${FILENAME} ]]; then
-   DIRNAME=$(cd $(dirname $FILENAME); pwd)
-   FILENAME=${DIRNAME}/$(basename ${FILENAME})
-   FTYPE=file
- else
-   1>&2 echo "Not a valid file or directory: ${FILENAME}"
-   1>&2 echo "Touch file before use"
-   return
- fi
-
- echo ${CMD} ${FTYPE} ${USERNAME} ${MACHINE} ${FILENAME}
-}
-
 pupdate() { case ":${PATH:=$1}:" in *:"$1":*) ;; *) export PATH="$1:$PATH" ;; esac; }
 
+# Setup autocompletion
+mkdir -p ~/.zsh/completion
+fpath=(~/.zsh/completion $fpath)
+autoload -Uz compinit && compinit -i
+
 # ZSH Settings
-autoload -Uz compinit
-compinit 
 bindkey "^[[A" history-beginning-search-backward
 bindkey "^[[B" history-beginning-search-forward
+
+# You may need to manually set your language environment
+export LANG=en_AU.UTF-8
 
 # Load ZSH other files
 for file in $(find $HOME/.zsh -name "*.rc"); do
   source "$file"
 done
 
-# You may need to manually set your language environment
-export LANG=en_AU.UTF-8
 
 # Preferred editor for local and remote sessions
 if which mvim >/dev/null 2>/dev/null
@@ -42,20 +25,10 @@ then
 else
   export EDITOR='vim'
 fi
-if [[ "$TERM_PROGRAM" == "iTerm.app" ]] && ! [[ -e "$HOME/.zsh/99-iterm.rc" ]]
-then
-  curl -L https://iterm2.com/shell_integration/zsh -o ~/.zsh/99-iterm.rc
-  source ~/.zsh/99-iterm.rc
-elif [[ "$TERM_PROGRAM" != "iTerm.app" ]] && [[ ! -z "$SSH_CLIENT" ]]
-then
-  export localeditor
-  alias mvim=localeditor
-elif [[ "$TERM_PROGRAM" == 'Apple_Terminal' ]]
+if [[ "$TERM_PROGRAM" == 'Apple_Terminal' ]]
 then
   # This will cause an implicit -w flag to the ssh-login script for Work Laptop (not in this repo)
   export WAIT_FOR_INPUT=true
-else
-  disable -f localeditor
 fi
 
 # Shell preferences
@@ -85,9 +58,6 @@ function awsall {
   trap "break" INT TERM
 }
 
-# Powerline
-source $(python3 -m pip show powerline-status | egrep "^Location:" | cut -f2- -d\: | xargs)/powerline/bindings/zsh/powerline.zsh
-
 # SCM Breeze
 [ -s "$HOME/.scm_breeze/scm_breeze.sh" ] && source "$HOME/.scm_breeze/scm_breeze.sh"
 export JAVA_TOOLS_OPTIONS="-Dlog4j2.formatMsgNoLookups=true"
@@ -98,7 +68,6 @@ then
   eval $(thefuck --alias)
 fi
 
-# Setup autocompletion
-mkdir -p ~/.zsh/completion
-fpath=(~/.zsh/completion $fpath)
-autoload -Uz compinit && compinit -i
+# Starship
+eval "$(starship init zsh)"
+export STARSHIP_CONFIG=~/.shellconfig/starship.toml
