@@ -75,8 +75,5 @@ then
   export STARSHIP_CONFIG=~/.shellconfig/starship.toml
 else
   autoload -U promptinit; promptinit
-  if [[ $TERM_PROGRAM != "WarpTerminal" ]]
-  then
     prompt purer
-  fi
 fi
