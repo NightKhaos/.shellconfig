@@ -77,8 +77,6 @@ else
   autoload -U promptinit; promptinit
   if [[ $TERM_PROGRAM != "WarpTerminal" ]]
   then
-    prompt pure
-  else
     prompt purer
   fi
 fi
