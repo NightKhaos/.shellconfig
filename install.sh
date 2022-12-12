@@ -5,7 +5,7 @@ cd -
 ZSHRC_SOURCE=$WHEREAMI/zshrc
 
 # Install Starship
-if ! which starship >/dev/null 2>/dev/null
+if [[ $(uname -m) != "armv7l" ]] && ! which starship >/dev/null 2>/dev/null
 then
   curl -sS https://starship.rs/install.sh | sh
 fi

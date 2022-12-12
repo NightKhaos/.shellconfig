@@ -69,5 +69,12 @@ then
 fi
 
 # Starship
-eval "$(starship init zsh)"
-export STARSHIP_CONFIG=~/.shellconfig/starship.toml
+if [[ $(uname -m) != "armv7l" ]]
+then
+  eval "$(starship init zsh)"
+  export STARSHIP_CONFIG=~/.shellconfig/starship.toml
+else
+  fpath+=($HOME/.zsh/pure)
+  autoload -U promptinit; promptinit
+  prompt pure
+fi
