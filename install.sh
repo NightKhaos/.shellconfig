@@ -9,7 +9,7 @@ if [[ $(uname -m) != "armv7l" ]] && ! which starship >/dev/null 2>/dev/null
 then
   curl -sS https://starship.rs/install.sh | sh
 else
-  npm -g install pure-prompt purer-prompt
+  npm -g install purer-prompt
 fi
 
 # Setup Shell
