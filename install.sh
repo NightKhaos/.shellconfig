@@ -8,6 +8,8 @@ ZSHRC_SOURCE=$WHEREAMI/zshrc
 if [[ $(uname -m) != "armv7l" ]] && ! which starship >/dev/null 2>/dev/null
 then
   curl -sS https://starship.rs/install.sh | sh
+else
+  git clone https://github.com/sindresorhus/pure.git "$HOME/.zsh/pure"
 fi
 
 # Setup Shell
