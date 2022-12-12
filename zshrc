@@ -74,7 +74,11 @@ then
   eval "$(starship init zsh)"
   export STARSHIP_CONFIG=~/.shellconfig/starship.toml
 else
-  fpath+=($HOME/.zsh/pure)
   autoload -U promptinit; promptinit
-  prompt pure
+  if [[ $TERM_PROGRAM != "WarpTerminal" ]]
+  then
+    prompt pure
+  else
+    prompt purer
+  fi
 fi
