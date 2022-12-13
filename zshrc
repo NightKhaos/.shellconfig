@@ -63,7 +63,7 @@ function awsall {
 export JAVA_TOOLS_OPTIONS="-Dlog4j2.formatMsgNoLookups=true"
 
 # Setup thefuck
-if which thefuck >/dev/null
+if which thefuck >/dev/null 2>/dev/null
 then
   eval $(thefuck --alias)
 fi
@@ -71,8 +71,15 @@ fi
 # Starship
 if [[ $(uname -m) != "armv7l" ]]
 then
-  eval "$(starship init zsh)"
-  export STARSHIP_CONFIG=~/.shellconfig/starship.toml
+  if which starship >/dev/null 2>/dev/null
+  then
+    eval "$(starship init zsh)"
+    export STARSHIP_CONFIG=~/.shellconfig/starship.toml
+  else
+    echo 'WARNING: starship not installed, please install'
+    autoload -U promptinit; promptinit
+    prompt redhat
+  fi
 elif [[ $TERM_PROGRAM == "WarpTerminal" ]]
 then
   # Warp fallback prompt
@@ -80,5 +87,11 @@ then
   prompt redhat
 else
   autoload -U promptinit; promptinit
-  prompt pure
+  if prompt -l | grep -wq pure
+  then
+    prompt pure
+  else
+    echo 'WARNING: pure not installed, please install'
+    prompt redhat
+  fi
 fi
