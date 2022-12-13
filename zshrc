@@ -75,5 +75,7 @@ then
   export STARSHIP_CONFIG=~/.shellconfig/starship.toml
 else
   autoload -U promptinit; promptinit
-    prompt purer
+  prompt pure
+  prompt_newline='%666v'
+  PROMPT=" $PROMPT"
 fi
