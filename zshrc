@@ -73,9 +73,12 @@ if [[ $(uname -m) != "armv7l" ]]
 then
   eval "$(starship init zsh)"
   export STARSHIP_CONFIG=~/.shellconfig/starship.toml
+elif [[ $TERM_PROGRAM != "WarpTerminal" ]]
+then
+  # Warp fallback prompt
+  autoload -U promptinit; promptinit
+  prompt redhat
 else
   autoload -U promptinit; promptinit
   prompt pure
-  prompt_newline='%666v'
-  PROMPT=" $PROMPT"
 fi
