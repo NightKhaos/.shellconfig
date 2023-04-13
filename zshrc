@@ -95,3 +95,4 @@ else
     prompt redhat
   fi
 fi
+

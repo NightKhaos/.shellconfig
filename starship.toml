@@ -1,2 +1,14 @@
 # Get editor completions based on the config schema
 "$schema" = 'https://starship.rs/config-schema.json'
+
+[cmd_duration]
+min_time = 500
+
+[directory]
+truncation_length = 5
+
+[python]
+python_binary = ['python3', 'python']
+
+[time]
+disabled = false
