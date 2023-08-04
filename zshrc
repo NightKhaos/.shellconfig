@@ -84,4 +84,7 @@ else
 fi
 
 # Print subshell DCS for Warp
-printf '\eP$f{"hook": "SourcedRcFileForWarp", "value": { "shell": "zsh"}}\x9c'
+if [[ $TERM_PROGRAM == "WarpTerminal" ]]
+then
+  printf '\eP$f{"hook": "SourcedRcFileForWarp", "value": { "shell": "zsh"}}\x9c'
+fi
