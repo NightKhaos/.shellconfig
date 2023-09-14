@@ -62,6 +62,9 @@ then
   then
     eval "$(starship init zsh)"
     export STARSHIP_CONFIG=~/.shellconfig/starship.toml
+  
+    # Print subshell DCS for Warp
+    printf '\eP$f{"hook": "SourcedRcFileForWarp", "value": { "shell": "zsh"}}\x9c'
   else
     echo 'WARNING: starship not installed, please install'
     autoload -U promptinit; promptinit
@@ -81,10 +84,4 @@ else
     echo 'WARNING: pure not installed, please install'
     prompt redhat
   fi
-fi
-
-# Print subshell DCS for Warp
-if [[ $TERM_PROGRAM == "WarpTerminal" ]]
-then
-  printf '\eP$f{"hook": "SourcedRcFileForWarp", "value": { "shell": "zsh"}}\x9c'
 fi
