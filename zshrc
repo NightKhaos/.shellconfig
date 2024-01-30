@@ -15,14 +15,11 @@ for file in $(find $HOME/.zsh -name "*.rc"); do
   source "$file"
 done
 
-if [[ "$TERM_PROGRAM" == 'Apple_Terminal' ]]
-then
-  # This will cause an implicit -w flag to the ssh-login script for Work Laptop (not in this repo)
-  export WAIT_FOR_INPUT=true
-fi
-
 # Shell preferences
 alias ls="ls --color"
+
+# direnv hooks
+eval "$(direnv hook zsh)"
 
 # AWS Useful Aliases and Functions
 alias whoiam='aws sts get-caller-identity'
@@ -55,6 +52,13 @@ then
   eval $(thefuck --alias)
 fi
 
+# Setup mise
+if which mise >/dev/null 2>/dev/null
+then
+  eval "$(mise activate)"
+fi
+
+
 # Starship
 if [[ $(uname -m) != "armv7l" ]]
 then
@@ -62,19 +66,11 @@ then
   then
     eval "$(starship init zsh)"
     export STARSHIP_CONFIG=~/.shellconfig/starship.toml
-  
-    # Print subshell DCS for Warp
-    printf '\eP$f{"hook": "SourcedRcFileForWarp", "value": { "shell": "zsh"}}\x9c'
   else
     echo 'WARNING: starship not installed, please install'
     autoload -U promptinit; promptinit
     prompt redhat
   fi
-elif [[ $TERM_PROGRAM == "WarpTerminal" ]]
-then
-  # Warp fallback prompt
-  autoload -U promptinit; promptinit
-  prompt redhat
 else
   autoload -U promptinit; promptinit
   if prompt -l | grep -wq pure
