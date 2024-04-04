@@ -18,9 +18,6 @@ done
 # Shell preferences
 alias ls="ls --color"
 
-# direnv hooks
-eval "$(direnv hook zsh)"
-
 # AWS Useful Aliases and Functions
 alias whoiam='aws sts get-caller-identity'
 function awsall {
