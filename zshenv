@@ -7,11 +7,3 @@ done
 
 # Add additional user scripts
 pupdate $HOME/bin
-
-# Preferred editor for local and remote sessions
-if which mvim >/dev/null 2>/dev/null
-then
-  export EDITOR='mvim'
-else
-  export EDITOR='vim'
-fi

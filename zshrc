@@ -55,8 +55,19 @@ fi
 # Setup mise
 if which mise >/dev/null 2>/dev/null
 then
-  eval "$(mise activate)"
+  if [[ -o interactive ]]; then
+    eval "$(mise activate zsh)"
+  else
+    eval "$(mise activate zsh --shims)" 
+  fi
 fi
+
+# Set the xterm title
+case $TERM in
+  xterm*)
+    precmd () {print -Pn "\e]0;%n@%m: %~\a"}
+    ;;
+esac    
 
 
 # Starship
