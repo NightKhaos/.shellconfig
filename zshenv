@@ -7,3 +7,8 @@ done
 
 # Add additional user scripts
 pupdate $HOME/bin
+
+# Add history
+SAVEHIST=1000
+HISTFILE=$HOME/.zsh_history
+
