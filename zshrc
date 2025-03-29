@@ -3,9 +3,13 @@ mkdir -p ~/.zsh/completion
 fpath=(~/.zsh/completion $fpath)
 autoload -Uz compinit && compinit -i
 
-# ZSH Settings
-bindkey "^[[A" history-beginning-search-backward
-bindkey "^[[B" history-beginning-search-forward
+# Cycle through history based on characters already typed on the line
+autoload -U up-line-or-beginning-search
+autoload -U down-line-or-beginning-search
+zle -N up-line-or-beginning-search
+zle -N down-line-or-beginning-search
+bindkey "$key[Up]" up-line-or-beginning-search
+bindkey "$key[Down]" down-line-or-beginning-search
 
 # You may need to manually set your language environment
 export LANG=en_AU.UTF-8
