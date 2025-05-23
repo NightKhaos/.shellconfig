@@ -13,3 +13,6 @@ HISTSIZE=10000
 SAVEHIST=10000
 HISTFILE=$HOME/.zsh_history
 setopt appendhistory
+
+# Add Editor
+export EDITOR=vim
