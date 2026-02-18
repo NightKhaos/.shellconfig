@@ -7,12 +7,16 @@ done
 
 # Add additional user scripts
 pupdate $HOME/bin
+pupdate $HOME/.local/bin
 
 # Add history
 HISTSIZE=10000
 SAVEHIST=10000
 HISTFILE=$HOME/.zsh_history
 setopt appendhistory
+setopt HIST_IGNORE_SPACE      # Commands starting with space not saved
+setopt HIST_IGNORE_DUPS       # Don't save duplicate commands
+setopt HIST_IGNORE_ALL_DUPS   # Remove older duplicates from history
 
 # Add Editor
 export EDITOR=vim

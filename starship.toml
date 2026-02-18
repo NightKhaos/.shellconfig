@@ -12,3 +12,25 @@ python_binary = ['python3', 'python']
 
 [time]
 disabled = false
+
+[custom.brazil_versionset]
+command = '''
+dir="$PWD"
+while [ "$dir" != "/" ]; do
+  if [ -f "$dir/packageInfo" ]; then
+    grep -o "versionSet = \"[^\"]*\"" "$dir/packageInfo" 2>/dev/null | cut -d"\"" -f2
+    break
+  fi
+  dir=$(dirname "$dir")
+done
+'''
+when = '''
+dir="$PWD"
+while [ "$dir" != "/" ]; do
+  [ -f "$dir/packageInfo" ] && exit 0
+  dir=$(dirname "$dir")
+done
+exit 1
+'''
+format = "🌍 [$output]($style) "
+style = "bold blue"
