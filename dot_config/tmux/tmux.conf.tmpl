@@ -1,0 +1,62 @@
+# tmux configuration — managed by dotfiles-shell.
+#
+# Spawned by the Hyprland meta+Return keybind as `alacritty -e tmux
+# new-session` (fresh session per window; meta+shift+Return spawns a plain
+# zsh Alacritty with no tmux as the escape hatch). See dotfiles-hyprland
+# conf.d/30-keybinds.conf.
+
+# --- terminal / colour -----------------------------------------------------
+# Inside tmux, TERM flips off `alacritty` to this value — it must exist in the
+# terminfo db (it does on this box; see specs/lessons-learned.md snap-TUI
+# terminfo entry for why TERM correctness is load-bearing here).
+set -g default-terminal "tmux-256color"
+# Preserve Alacritty's truecolour (keeps wallust theming intact inside tmux).
+set -ga terminal-overrides ",alacritty:RGB"
+
+# --- status bar colours ----------------------------------------------------
+# Explicit, high-contrast defaults — tmux's built-in status-style is
+# bg=green,fg=black, which clashes badly against a themed terminal palette.
+# These use fixed 256-colour slots (not palette-dependent) so they read
+# correctly everywhere, INCLUDING remote SSH boxes with no wallust. When the
+# wallust-tmux integration lands it will source over the top of these on
+# machines that have it; this block stays as the no-wallust fallback.
+set -g status-style "bg=colour236,fg=colour250"              # bar: dark grey / light grey
+set -g window-status-current-style "bg=colour31,fg=colour231,bold"  # active: blue / near-white
+set -g window-status-style "fg=colour244"                    # inactive: mid grey
+set -g message-style "bg=colour31,fg=colour231"              # command prompt: blue / near-white
+set -g pane-active-border-style "fg=colour31"
+set -g pane-border-style "fg=colour238"
+
+# --- behaviour -------------------------------------------------------------
+set -g mode-keys vi            # vi-style copy mode (h/j/k/l, v, y, /)
+set -g base-index 1            # windows number from 1
+setw -g pane-base-index 1      # panes number from 1
+set -g renumber-windows on     # no gaps after closing a window
+set -g mouse on                # click/scroll panes and windows
+set -g focus-events on         # nvim autoread / focus reporting works
+
+# Scrollback per pane. Scales with the `big_shell_buffer` chezmoi data flag:
+# scrollback is anonymous text, so under pressure it lands in zram and
+# compresses well — cheap to keep large on a zram-backed machine, full cost on
+# a bare box. Off (absent/false) -> 50000; on -> 250000. Same flag gates zsh
+# HISTSIZE/SAVEHIST (see ~/.zsh/env.d/50-history.env).
+set -g history-limit {{ if and (hasKey . "big_shell_buffer") .big_shell_buffer }}250000{{ else }}50000{{ end }}
+
+# --- escape-time (per-machine tunable) -------------------------------------
+# Delay tmux waits after a lone ESC byte to see if it's the start of a
+# multi-byte key sequence (arrows, F-keys, Alt-chords) rather than a real
+# Escape press. Too high = laggy ESC in nvim; too low, over a link that
+# FRAGMENTS a key sequence across packets, = a multi-key press misread as
+# ESC-then-literal.
+#
+# 10ms is right for a LOCAL terminal: the emulator writes the whole sequence
+# in one go, so there's no gap to bridge. Modern SSH normally ships a key
+# sequence in a single packet too, so 10ms usually holds remotely as well —
+# raise it only for genuinely fragmenting transports (high-latency links,
+# teletype/serial, telnet-to-GPIO shells and similar).
+#
+# Override per-machine in ~/.config/chezmoi/chezmoi.toml:
+#     [data]
+#       tmux_escape_time = 200
+# Absent → 10 (the local default). Peer of the other per-machine [data] keys.
+set -g escape-time {{ if hasKey . "tmux_escape_time" }}{{ .tmux_escape_time }}{{ else }}10{{ end }}

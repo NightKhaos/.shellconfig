@@ -112,6 +112,30 @@ mtime when inputs are unchanged (shell-staleness indicator contract).
 
 ---
 
+## tmux
+
+**Config root**: `~/.config/tmux/`
+**Ownership mode**: copy
+
+**Files managed**:
+- `~/.config/tmux/tmux.conf` — base tmux config (terminfo, vi copy mode,
+  nvim-friendly `escape-time`, sane indexing/mouse defaults).
+
+**Drop-in surfaces**: none currently. tmux has a single canonical config file.
+If per-consumer tmux config is ever needed, widen this contract with a
+`source-file ~/.config/tmux/tmux.d/*.conf` include pattern rather than letting
+consumers edit `tmux.conf` in place.
+
+**Consumer constraints**: consumers must not add files to `~/.config/tmux/`.
+Additions require a change to this repo.
+
+**Spawned by**: the Hyprland `meta+Return` keybind (`$term -e tmux
+new-session`, fresh session per window) in dotfiles-hyprland; `meta+shift+Return`
+spawns a plain zsh Alacritty with no tmux. That binding lives in dotfiles-hyprland
+(desktop domain), not here — this repo owns only the tmux config itself.
+
+---
+
 ## zsh — init files
 
 **Config root**: `~/`
