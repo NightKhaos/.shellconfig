@@ -60,3 +60,101 @@ set -g history-limit {{ if and (hasKey . "big_shell_buffer") .big_shell_buffer }
 #       tmux_escape_time = 200
 # Absent → 10 (the local default). Peer of the other per-machine [data] keys.
 set -g escape-time {{ if hasKey . "tmux_escape_time" }}{{ .tmux_escape_time }}{{ else }}10{{ end }}
+
+# --- keybindings: mirror the Hyprland system layer -------------------------
+# Layer split, outermost → innermost:
+#   compositor (Hyprland) owns SUPER  — monitors / workspaces / windows
+#   multiplexer (tmux)    owns ALT     — tmux-windows / panes INSIDE one window
+#   app (nvim, …)         owns Ctrl    — buffers / splits
+# Hyprland grabs every SUPER chord before the terminal sees it, so tmux can't
+# reuse those keys — instead it borrows ALT (almost free at the Hyprland level,
+# only ALT+Tab is taken) to mirror the Super-bind PATTERN one layer down:
+# arrows always move focus, the modifier says which layer you're steering.
+# The Alt-chord binds below rely on the low escape-time set above — a high
+# escape-time makes M-<key> laggy or misreads it as ESC-then-literal.
+
+# prefix: C-b -> C-Space. One-handed, no readline clash (C-a would collide with
+# start-of-line). C-Space still send-prefix so a nested/remote tmux is reachable.
+set -g prefix C-Space
+unbind C-b
+bind C-Space send-prefix
+
+# panes: Alt+arrows = select-pane        (mirrors Hyprland Super+arrows = focus)
+bind -n M-Left  select-pane -L
+bind -n M-Down  select-pane -D
+bind -n M-Up    select-pane -U
+bind -n M-Right select-pane -R
+
+# panes: Alt+Shift+arrows = resize-pane  (mirrors Hyprland Super+Shift+arrows)
+bind -n M-S-Left  resize-pane -L 5
+bind -n M-S-Down  resize-pane -D 5
+bind -n M-S-Up    resize-pane -U 5
+bind -n M-S-Right resize-pane -R 5
+
+# windows: Alt+1..0 = select-window      (mirrors Hyprland Super+1..0 = workspace)
+bind -n M-1 select-window -t 1
+bind -n M-2 select-window -t 2
+bind -n M-3 select-window -t 3
+bind -n M-4 select-window -t 4
+bind -n M-5 select-window -t 5
+bind -n M-6 select-window -t 6
+bind -n M-7 select-window -t 7
+bind -n M-8 select-window -t 8
+bind -n M-9 select-window -t 9
+bind -n M-0 select-window -t 10
+
+# window / pane lifecycle
+bind -n M-c new-window   -c "#{pane_current_path}"   # Alt+c : new window (keep cwd)
+bind '|'    split-window -h -c "#{pane_current_path}" # prefix | : split left/right
+bind '-'    split-window -v -c "#{pane_current_path}" # prefix - : split top/bottom
+bind C-l    send-keys 'C-l'                          # prefix C-l : clear (reclaimed, see below)
+
+# --- seamless nav across nvim splits AND tmux panes ------------------------
+# Ctrl+h/j/k/l crosses the nvim-split / tmux-pane boundary as ONE space, via
+# christoomey/vim-tmux-navigator (declared in dotfiles-vim's plug block). The
+# is_vim guard: if the active pane is running (n)vim, forward the keystroke so
+# vim moves its own split; otherwise tmux moves the pane. This steals C-l's
+# readline clear-screen (it's now "navigate right") — reclaimed as `prefix C-l`.
+is_vim="ps -o state= -o comm= -t '#{pane_tty}' \
+    | grep -iqE '^[^TXZ ]+ +(\\S+\\/)?g?(view|l?n?vim?x?|fzf)(diff)?$'"
+bind -n 'C-h' if-shell "$is_vim" 'send-keys C-h'  'select-pane -L'
+bind -n 'C-j' if-shell "$is_vim" 'send-keys C-j'  'select-pane -D'
+bind -n 'C-k' if-shell "$is_vim" 'send-keys C-k'  'select-pane -U'
+bind -n 'C-l' if-shell "$is_vim" 'send-keys C-l'  'select-pane -R'
+bind -n 'C-\' if-shell "$is_vim" 'send-keys C-\\' 'select-pane -l'
+bind -T copy-mode-vi 'C-h' select-pane -L
+bind -T copy-mode-vi 'C-j' select-pane -D
+bind -T copy-mode-vi 'C-k' select-pane -U
+bind -T copy-mode-vi 'C-l' select-pane -R
+bind -T copy-mode-vi 'C-\' select-pane -l
+
+# --- clipboard: bridge copy-mode into the system clipboard -----------------
+# Decision is made at RUNTIME, not baked in at chezmoi-render time — so ONE
+# config is portable across local Wayland, SSH, and headless hosts. (An earlier
+# cut gated these binds on a render-time `lookPath "wl-copy"`, which is the wrong
+# layer: it conflates "this MACHINE has wl-copy" with "this SESSION can reach a
+# Wayland clipboard" — breaking a wl-copy-equipped host attached over SSH/TTY.)
+#
+#   1. OSC52 (set-clipboard on) is the UNIVERSAL carrier and needs no wl-copy.
+#      On a copy, tmux emits the clipboard escape to whatever terminal is
+#      attached: Alacritty writes it to the local Wayland clipboard (cursor-clip,
+#      the Super+V manager, picks it up); over SSH the local client's terminal
+#      does the same. This is
+#      the mechanism on headless boxes and remote sessions. (Alacritty enables
+#      OSC52 *copy* by default; OSC52 *paste* is off for security — hence the
+#      separate paste path below.)
+#   2. wl-copy is an OPTIONAL local enhancement, detected at runtime (binary
+#      present AND a Wayland session reachable). It sidesteps OSC52 size caps and
+#      guarantees the cursor-clip feed. Absent/unreachable → it's a no-op and layer
+#      1 still carries the copy: copy-pipe sets the tmux buffer (which triggers
+#      OSC52) regardless of what the pipe target does with the bytes.
+set -g set-clipboard on
+CLIP='command -v wl-copy >/dev/null 2>&1 && wl-copy 2>/dev/null || cat'
+bind -T copy-mode-vi y     send-keys -X copy-pipe-and-cancel "$CLIP"
+bind -T copy-mode-vi Enter send-keys -X copy-pipe-and-cancel "$CLIP"
+bind -T copy-mode-vi MouseDragEnd1Pane send-keys -X copy-pipe-and-cancel "$CLIP"
+# prefix p : paste the system clipboard. Uses wl-paste when reachable, else falls
+# back to the tmux buffer (kept populated by the copies above). Guarded so an
+# empty/failed wl-paste never clobbers the buffer. Alacritty's Ctrl+Shift+V /
+# middle-click also paste directly and always work — this is just a keyboard peer.
+bind p run-shell 'out=$(wl-paste --no-newline 2>/dev/null); [ -n "$out" ] && tmux set-buffer -- "$out"; tmux paste-buffer'
